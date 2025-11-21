@@ -1,0 +1,759 @@
+<?xml version="1.0" encoding="utf-8"?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide">
+
+    <g:ui_form>
+
+        <style>
+            /* ================================================================= */
+            /*                           LAYOUT DAS ABAS                         */
+            /* ================================================================= */
+
+            .tab-container {
+                display: flex;
+                margin-bottom: 20px;
+                border-bottom: 2px solid #ccc;
+            }
+
+            .tab {
+                padding: 12px 18px;
+                margin-right: 5px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: bold;
+                background: #f3f3f3;
+                border-radius: 6px 6px 0 0;
+                transition: 0.3s;
+            }
+
+            .tab.active {
+                background: #009639;
+                color: #fff;
+            }
+
+            /* Conteúdo das abas */
+            .tab-content {
+                display: none;
+                padding-top: 20px;
+            }
+
+            .tab-content.active {
+                display: block;
+            }
+
+
+            /* ================================================================= */
+            /*                         ESTILO GLOBAL PADRÃO                      */
+            /* ================================================================= */
+
+            body,
+            div,
+            label,
+            input,
+            select,
+            textarea,
+            button {
+                font-family: Arial, sans-serif !important;
+            }
+
+            /* Inputs */
+            input[type="text"],
+            input[type="file"],
+            textarea,
+            select {
+                width: 100%;
+                padding: 10px;
+                margin: 5px 0 15px 0;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                box-sizing: border-box;
+            }
+
+            /* Textarea */
+            textarea {
+                min-height: 80px;
+                resize: vertical;
+            }
+
+            /* Botões */
+            button {
+                padding: 10px 18px;
+                background: #009639;
+                color: #fff;
+                font-weight: bold;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+            button:hover {
+                opacity: 0.9;
+            }
+
+            /* Botões específicos */
+            #downloadBtn {
+                background: #FF9800;
+            }
+
+            #attachBtn {
+                background: #2196F3;
+            }
+
+            #btnSalvar {
+                background: #28a745;
+            }
+
+
+            /* ================================================================= */
+            /*                       TABELAS – CODE REVIEW                       */
+            /* ================================================================= */
+
+            /* Container para permitir scroll horizontal em telas pequenas */
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+                margin-top: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+                background: #fff;
+            }
+
+            /* Tabela */
+            table {
+                width: 100%;
+                table-layout: fixed;   /* Faz as colunas caberem no limite */
+            }
+
+            th, td {
+                white-space: normal;   /* Deixa o texto quebrar */
+                word-wrap: break-word; /* Garante a quebra */
+                padding: 8px;
+                font-size: 13px;
+            }
+
+            tr:nth-child(even) td {
+                background: #f3f3f3;
+            }
+
+            /* Hover para destacar linha */
+            tbody tr:hover td {
+                background: #e9f5ee;
+            }
+
+            /* Estilo para link do nome */
+            td a {
+                color: #0066cc;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+            td a:hover {
+                text-decoration: underline;
+            }
+
+            /* STATUS PASSOU / NÃO PASSOU */
+            tr.passou td {
+                background: #DFF0D8 !important;
+            }
+
+            tr.nao-passou td {
+                background: #F8D7DA !important;
+            }
+
+            /* Checkbox de Passou / Não Passou */
+            td input[type="checkbox"] {
+                width: 18px;
+                height: 18px;
+                cursor: pointer;
+            }
+
+            /* Input Comentário */
+            td input[type="text"] {
+                width: 100%;
+                padding: 6px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+
+            /* -------- Responsividade para telas menores -------- */
+
+            @media (max-width: 768px) {
+
+                th,
+                td {
+                    padding: 8px;
+                    font-size: 13px;
+                }
+
+                td input[type="text"] {
+                    font-size: 12px;
+                    padding: 5px;
+                }
+
+                table {
+                    min-width: 700px;
+                    /* ainda mantém a estrutura */
+                }
+            }
+
+            @media (max-width: 480px) {
+                table {
+                    min-width: 600px;
+                }
+
+                th {
+                    font-size: 12px;
+                    padding: 6px;
+                }
+
+                td {
+                    font-size: 12px;
+                    padding: 6px;
+                }
+            }
+        </style>
+
+        <!-- =============================== -->
+        <!--       ABAS DO SISTEMA          -->
+        <!-- =============================== -->
+        <div class="tab-container">
+            <div class="tab active" data-tab="doc">📄 Gerar Documentação</div>
+            <div class="tab" data-tab="review">📝 Code Review</div>
+            <div class="tab" data-tab="scan">🔎 Instance Scan</div>
+        </div>
+
+
+
+        <!-- ===================================================== -->
+        <!-- ====================== ABA 1 ========================= -->
+        <!-- ===================================================== -->
+        <div id="tab-doc" class="tab-content active">
+
+            <div style="max-width:900px; margin:auto; padding:20px;">
+
+                <label for="updateSetInput"><b>Informe o nome do Update Set:</b></label>
+                <input type="text" id="updateSetInput" placeholder="Ex.: Nome do Update Set" style="width:100%;padding:8px;margin-top:5px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;" />
+
+                <label for="audienceSelect"><b>Selecione o público:</b></label>
+                <select id="audienceSelect" style="width:100%;padding:8px;margin-top:5px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;">
+                    <option value="dev">Desenvolvedor</option>
+                    <option value="po">P.O.</option>
+                </select>
+
+                <div style="text-align:center;margin-top:15px;">
+                    <button id="generateBtn" type="button" style="background:#4CAF50;color:#fff;padding:10px 18px;border:none;border-radius:6px;cursor:pointer;">⚙️ Gerar Documentação</button>
+
+                    <button id="downloadBtn" type="button" style="background:#FF9800;color:#fff;padding:10px 18px;border:none;border-radius:6px;cursor:pointer;margin-left:10px;">💾 Exportar PDF</button>
+
+                    <button id="attachBtn" type="button" style="background:#2196F3;color:#fff;padding:10px 18px;border:none;border-radius:6px;cursor:pointer;margin-left:10px; display:none;">📎 Anexar Imagem</button>
+
+                    <input type="file" id="fileInput" accept="image/*" style="display:none;" />
+                </div>
+
+                <hr style="margin:30px 0;border:none;border-top:2px solid #eee;" />
+
+                <div id="docResult" style="margin-top:20px; min-height:100px;"></div>
+
+                <div id="blocoEvidencias" style="margin-top:20px;"></div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ===================================================== -->
+        <!-- ====================== ABA 2 ========================= -->
+        <!-- ===================================================== -->
+        <div id="tab-review" class="tab-content">
+
+            <style>
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 20px;
+                }
+
+                th,
+                td {
+                    border: 1px solid #ccc;
+                    padding: 10px;
+                }
+
+                th {
+                    background: #009639;
+                    color: white;
+                    text-align: center;
+                }
+
+                tr.passou {
+                    background: #DFF0D8 !important;
+                }
+
+                tr.nao-passou {
+                    background: #F8D7DA !important;
+                }
+            </style>
+
+            <div style="max-width:900px;margin:auto;padding:20px;">
+
+                <label><b>Informe o nome do Update Set(s):</b></label>
+                <textarea id="updateSets" placeholder="Digite os nomes separados por vírgula"></textarea>
+
+                <label><b>Filtrar por Type</b></label>
+                <input type="text" id="typeFilter" />
+
+                <label><b>Excluir Type</b></label>
+                <input type="text" id="notTypeFilter" />
+
+                <label><b>Filtrar por Application</b></label>
+                <input type="text" id="applicationFilter" />
+
+                <div class="filter-group" style="margin-top:10px;">
+                    <input type="checkbox" id="filterPassou" onchange="filtrarPassou()" />
+                    <label for="filterPassou">Mostrar apenas os que passaram</label>
+
+                    <input type="checkbox" id="filterNaoPassou" onchange="filtrarNaoPassou()" />
+                    <label for="filterNaoPassou">Mostrar apenas os que não passaram</label>
+                </div>
+
+                <button id="btnBuscar" type="button" style="background:#2196F3;color:#fff;padding:10px 18px;border:none;border-radius:6px;cursor:pointer;margin-top:10px;">
+                    🔍 Buscar
+                </button>
+
+                <button id="btnSalvar" type="button" style="background:#4CAF50;color:#fff;padding:10px 18px;border:none;border-radius:6px;cursor:pointer;margin-left:10px;margin-top:10px;">
+                    💾 Salvar Review
+                </button>
+
+                <div id="resultado" style="margin-top:20px;"></div>
+
+            </div>
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- ====================== ABA 3 ========================= -->
+        <!-- ===================================================== -->
+        <div id="tab-scan" class="tab-content">
+
+            <div style="max-width:900px; margin:auto; padding:20px;">
+
+                <h2 style="margin-bottom:15px;">🔎 Instance Scan</h2>
+
+                <label for="scanTarget"><b>Informe o nome do Update Set:</b></label>
+                <input type="text" id="scanTarget" placeholder="Ex.: Nome do Update Set" style="width:100%;padding:8px;margin-top:5px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;" />
+
+                <div style="text-align:center;margin-top:15px;">
+                    <button id="scanBtn" type="button" style="background:#673ab7;color:#fff;padding:10px 18px;border:none;border-radius:6px;cursor:pointer;">
+                        🚀 Buscar
+                    </button>
+                </div>
+
+                <hr style="margin:30px 0;border:none;border-top:2px solid #eee;" />
+
+                <div id="scanResult" style="margin-top:20px; min-height:100px;"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- ===================== JAVASCRIPT ===================== -->
+        <!-- ===================================================== -->
+        <script>
+            /* ------------------------------------------ */
+            /*            CONTROLE DAS ABAS              */
+            /* ------------------------------------------ */
+            document.querySelectorAll(".tab").forEach(tab => {
+                tab.onclick = function() {
+                    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+                    this.classList.add("active");
+
+                    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+                    document.getElementById("tab-" + this.dataset.tab).classList.add("active");
+                };
+            });
+
+
+            /* ================================================================= */
+            /* ==================== FUNÇÕES DA ABA DE DOCUMENTAÇÃO ============= */
+            /* ================================================================= */
+
+            function generateDocumentation() {
+                var updateSet = document.getElementById("updateSetInput").value.trim();
+                if (!updateSet) {
+                    alert("Por favor, informe o nome do Update Set.");
+                    return;
+                }
+
+                var audience = document.getElementById("audienceSelect").value;
+                var docResult = document.getElementById("docResult");
+                docResult.innerHTML = "<p style='text-align:center;'><em>Gerando documentação...</em></p>";
+
+                var ga = new GlideAjax("GetUpdateSetDocumentation");
+                ga.addParam("sysparm_name", "getDocumentation");
+                ga.addParam("sysparm_update_set", updateSet);
+                ga.addParam("sysparm_audience", audience);
+                ga.getXMLAnswer(function(response) {
+                    docResult.innerHTML = response;
+                    document.getElementById("attachBtn").style.display = "inline-block";
+                    document.getElementById("updateSets").value = updateSet;
+                    buscarArtefatos();
+                });
+
+            }
+
+            document.getElementById("generateBtn").onclick = generateDocumentation;
+
+
+            /* Exportar PDF */
+            document.getElementById("downloadBtn").onclick = function() {
+                var contentDiv = document.getElementById("docResult");
+                if (!contentDiv.innerHTML.trim()) {
+                    alert("Nenhuma documentação gerada para exportar.");
+                    return;
+                }
+
+                var clone = contentDiv.cloneNode(true);
+                clone.querySelectorAll("input, textarea").forEach(function(el) {
+                    var value = el.value || el.placeholder || "";
+                    var span = document.createElement("span");
+                    span.style.borderBottom = "1px solid #ccc";
+                    span.textContent = value;
+                    el.parentNode.replaceChild(span, el);
+                });
+
+                var win = window.open("", "", "height=900,width=1000");
+                win.document.write("<html><head><title>Documentação</title></head><body>");
+                win.document.write(clone.innerHTML);
+                win.document.write("</body></html>");
+                win.document.close();
+                win.print();
+            };
+
+
+            /* Upload de imagens */
+            document.getElementById("attachBtn").onclick = () => document.getElementById("fileInput").click();
+
+            document.getElementById("fileInput").onchange = function(event) {
+                var file = event.target.files[0];
+                if (!file) return;
+
+                var ext = file.name.split(".").pop().toLowerCase();
+                var valid = ["jpg", "jpeg", "png", "gif"];
+
+                if (!valid.includes(ext)) {
+                    alert("Somente imagens JPG, PNG ou GIF.");
+                    return;
+                }
+
+                var container = document.createElement("div");
+                container.style.marginBottom = "12px";
+
+                var img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.style.maxWidth = "800px";
+                img.style.maxHeight = "890px";
+                img.style.objectFit = "cover";
+                img.style.border = "1px solid #ccc";
+                img.style.borderRadius = "6px";
+                img.style.boxShadow = "0 2px 5px rgba(0,0,0,0.1)";
+                container.appendChild(img);
+
+                var inputText = document.createElement("input");
+                inputText.type = "text";
+                inputText.placeholder = "Descrição da imagem...";
+                inputText.style.width = "100%";
+                inputText.style.marginTop = "6px";
+                container.appendChild(inputText);
+
+                document.getElementById("blocoEvidencias").appendChild(container);
+
+                alert("Imagem '" + file.name + "' anexada.");
+            };
+
+
+            /* ================================================================= */
+            /* ======================== ABA CODE REVIEW ========================= */
+            /* ================================================================= */
+
+            function buscarArtefatos() {
+                var updates = document.getElementById('updateSets').value;
+                var type = document.getElementById('typeFilter').value;
+                var notType = document.getElementById('notTypeFilter').value;
+                var application = document.getElementById('applicationFilter').value;
+
+                var ga = new GlideAjax('GetUpdateSetArtifacts');
+                ga.addParam('sysparm_name', 'getArtifacts');
+                ga.addParam('sysparm_updates', updates);
+                ga.addParam('sysparm_types', type);
+                ga.addParam('sysparm_notTypes', notType);
+                ga.addParam('sysparm_application', application);
+                ga.getXMLAnswer(function(response) {
+
+                    var data = JSON.parse(response || '[]');
+                    var resultado = document.getElementById('resultado');
+                    resultado.innerHTML = "";
+
+                    if (data.length === 0) {
+                        resultado.innerHTML = "<p><i>Nenhum artefato encontrado.</i></p>";
+                        return;
+                    }
+
+                    var info = document.createElement('p');
+                    info.innerHTML = '<strong>Total de registros:</strong> ' + data.length;
+                    resultado.appendChild(info);
+
+                    var table = document.createElement('table');
+
+                    var thead = document.createElement('thead');
+                    var trHead = document.createElement('tr');
+                    ['Nome', 'Ação', 'Type', 'Update Set', 'Application', 'Passou', 'Não Passou', 'Comentário']
+                    .forEach(function(h) {
+                        var th = document.createElement('th');
+                        th.textContent = h;
+                        trHead.appendChild(th);
+                    });
+
+                    thead.appendChild(trHead);
+                    table.appendChild(thead);
+
+                    var tbody = document.createElement('tbody');
+
+                    data.forEach(function(item, index) {
+                        var tr = document.createElement('tr');
+                        tr.id = 'row_' + index;
+
+                        tr.setAttribute("data-link", item.link);
+
+                        var tdNome = document.createElement('td');
+                        var link = document.createElement('a');
+                        link.href = item.link || "#";
+                        link.textContent = item.name;
+                        link.target = "_blank";
+                        tdNome.appendChild(link);
+                        tr.appendChild(tdNome);
+
+                        ['action', 'type', 'updateSet', 'application'].forEach(function(key) {
+                            var td = document.createElement('td');
+                            td.textContent = item[key];
+                            tr.appendChild(td);
+                        });
+
+                        // Passou
+                        var tdPassou = document.createElement('td');
+                        tdPassou.style.textAlign = "center";
+                        var chk1 = document.createElement('input');
+                        chk1.type = "checkbox";
+                        chk1.id = "passou_" + index;
+
+                        chk1.checked = item.passou === true || item.passou === "true";
+
+                        chk1.onclick = function() {
+                            marcarPassou(index);
+                        };
+                        tdPassou.appendChild(chk1);
+                        tr.appendChild(tdPassou);
+
+                        // Não passou
+                        var tdNao = document.createElement('td');
+                        tdNao.style.textAlign = "center";
+                        var chk2 = document.createElement('input');
+                        chk2.type = "checkbox";
+                        chk2.id = "naoPassou_" + index;
+
+                        chk2.checked = item.naoPassou === true || item.naoPassou === "true";
+
+                        chk2.onclick = function() {
+                            marcarNaoPassou(index);
+                        };
+                        tdNao.appendChild(chk2);
+                        tr.appendChild(tdNao);
+
+                        // Comentário
+                        var tdComent = document.createElement('td');
+                        var input = document.createElement("input");
+                        input.type = "text";
+                        input.id = "comentario_" + index;
+
+                        input.value = item.comentario || "";
+
+                        tdComent.appendChild(input);
+                        tr.appendChild(tdComent);
+
+                        tbody.appendChild(tr);
+                    });
+
+                    table.appendChild(tbody);
+
+                    var wrapper = document.createElement("div");
+                    wrapper.className = "table-responsive";
+                    wrapper.appendChild(table);
+                    resultado.appendChild(wrapper);
+
+                    Array.from(tbody.rows).forEach(function(row, index) {
+                        var passou = document.getElementById('passou_' + index);
+                        var naoPassou = document.getElementById('naoPassou_' + index);
+
+                        if (passou) {
+                            if (passou.checked) {
+                                row.classList.add('passou');
+                                row.classList.remove('nao-passou');
+                            }
+                        } else if (naoPassou) {
+                            if (naoPassou.checked) {
+                                row.classList.add('nao-passou');
+                                row.classList.remove('passou');
+                            }
+                        }
+                    });
+
+                    var info2 = document.createElement('p');
+                    info2.innerHTML = '<strong>Total de registros:</strong> ' + data.length;
+                    resultado.appendChild(info2);
+                });
+            }
+
+            function marcarPassou(i) {
+                var passou = document.getElementById("passou_" + i);
+                var nao = document.getElementById("naoPassou_" + i);
+                nao.checked = false;
+
+                var row = document.getElementById("row_" + i);
+                row.classList.add("passou");
+                row.classList.remove("nao-passou");
+            }
+
+            function marcarNaoPassou(i) {
+                var passou = document.getElementById("passou_" + i);
+                var nao = document.getElementById("naoPassou_" + i);
+                passou.checked = false;
+
+                var row = document.getElementById("row_" + i);
+                row.classList.add("nao-passou");
+                row.classList.remove("passou");
+            }
+
+            function filtrarPassou() {
+                var filtro = document.getElementById("filterPassou").checked;
+
+                document.querySelectorAll("#resultado table tbody tr").forEach(r => {
+                    var chk = r.querySelector("input[id^='passou_']");
+                    r.style.display = filtro ? (chk.checked ? "" : "none") : "";
+                });
+            }
+
+            function filtrarNaoPassou() {
+                var filtro = document.getElementById("filterNaoPassou").checked;
+
+                document.querySelectorAll("#resultado table tbody tr").forEach(r => {
+                    var chk = r.querySelector("input[id^='naoPassou_']");
+                    r.style.display = filtro ? (chk.checked ? "" : "none") : "";
+                });
+            }
+
+            function salvarReviews() {
+                var tabela = document.querySelector("#resultado table tbody");
+                if (!tabela) return;
+
+                var data = [];
+                Array.from(tabela.rows).forEach(function(row, index) {
+                    var passou = row.querySelector("input[id^='passou_']").checked;
+                    var naoPassou = row.querySelector("input[id^='naoPassou_']").checked;
+
+                    if (passou || naoPassou) {
+                        var comentario = row.querySelector("input[id^='comentario_']").value;
+                        var link = row.getAttribute("data-link");
+
+                        data.push({
+                            name: row.cells[0].innerText,
+                            action: row.cells[1].innerText,
+                            type: row.cells[2].innerText,
+                            updateSet: row.cells[3].innerText,
+                            application: row.cells[4].innerText,
+                            passou: passou,
+                            naoPassou: naoPassou,
+                            comentario: comentario,
+                            link: link
+                        });
+                    }
+                });
+
+                if (data.length === 0) {
+                    alert("Nenhum registro selecionado para salvar.");
+                    return;
+                }
+
+                var ga = new GlideAjax('GetUpdateSetArtifacts');
+                ga.addParam('sysparm_name', 'saveReview');
+                ga.addParam('sysparm_data', JSON.stringify(data));
+                ga.getXMLAnswer(function(response) {
+                    alert(response);
+                });
+            }
+
+
+            document.getElementById("btnBuscar").onclick = buscarArtefatos;
+            document.getElementById("btnSalvar").onclick = salvarReviews;
+
+            /* ================================================================= */
+            /* ======================== ABA INSTANCE SCAN ====================== */
+            /* ================================================================= */
+
+            document.getElementById("scanBtn").onclick = function() {
+                var updateSet = document.getElementById("scanTarget").value.trim();
+
+                if (!updateSet) {
+                    alert("Informe o nome do Update Set.");
+                    return;
+                }
+
+                document.getElementById("scanResult").innerHTML =
+                    "<em>Executando scan...</em>";
+
+                var ga = new GlideAjax("GetInstanceScanResults");
+                ga.addParam("sysparm_name", "runScan");
+                ga.addParam("sysparm_update_set", updateSet);
+
+                ga.getXMLAnswer(function(response) {
+                    if (!response) {
+                        document.getElementById("scanResult").innerHTML =
+                            "<p style='color:red;'>Nenhum resultado retornado.</p>";
+                        return;
+                    }
+
+                    document.getElementById("scanResult").innerHTML = response;
+                });
+            };
+
+            /* ================================================================= */
+            /* ====================== CARREGAR FINDINGS ========================= */
+            /* ================================================================= */
+
+            function showFindings(scanId) {
+
+                var detailsDiv = document.getElementById("findingDetails");
+
+                if (detailsDiv) {
+                    detailsDiv.innerHTML = "<p style='font-style:italic;'>Carregando findings...</p>";
+                }
+
+                var ga = new GlideAjax("GetInstanceScanResults");
+                ga.addParam("sysparm_name", "getFindings");
+                ga.addParam("sysparm_scan_id", scanId);
+
+                ga.getXMLAnswer(function(response) {
+
+                    if (!response) {
+                        detailsDiv.innerHTML =
+                            "<p style='color:red;'>Nenhum finding encontrado.</p>";
+                        return;
+                    }
+
+                    detailsDiv.innerHTML = response;
+                });
+            }
+        </script>
+
+    </g:ui_form>
+</j:jelly>
