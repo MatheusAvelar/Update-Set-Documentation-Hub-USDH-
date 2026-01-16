@@ -121,12 +121,16 @@
             /* Tabela */
             table {
                 width: 100%;
-                table-layout: fixed;   /* Faz as colunas caberem no limite */
+                table-layout: fixed;
+                /* Faz as colunas caberem no limite */
             }
 
-            th, td {
-                white-space: normal;   /* Deixa o texto quebrar */
-                word-wrap: break-word; /* Garante a quebra */
+            th,
+            td {
+                white-space: normal;
+                /* Deixa o texto quebrar */
+                word-wrap: break-word;
+                /* Garante a quebra */
                 padding: 8px;
                 font-size: 13px;
             }
@@ -284,14 +288,6 @@
                     background: #009639;
                     color: white;
                     text-align: center;
-                }
-
-                tr.passou {
-                    background: #DFF0D8 !important;
-                }
-
-                tr.nao-passou {
-                    background: #F8D7DA !important;
                 }
             </style>
 
@@ -595,15 +591,19 @@
                         var passou = document.getElementById('passou_' + index);
                         var naoPassou = document.getElementById('naoPassou_' + index);
 
+                        // limpa classes
+                        row.classList.remove('passou');
+                        row.classList.remove('nao-passou');
+
                         if (passou) {
-                            if (passou.checked) {
+                            if (passou.checked === true) {
                                 row.classList.add('passou');
-                                row.classList.remove('nao-passou');
                             }
-                        } else if (naoPassou) {
-                            if (naoPassou.checked) {
+                        }
+
+                        if (naoPassou) {
+                            if (naoPassou.checked === true) {
                                 row.classList.add('nao-passou');
-                                row.classList.remove('passou');
                             }
                         }
                     });
