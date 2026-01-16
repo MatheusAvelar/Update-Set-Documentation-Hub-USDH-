@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload>
+  
+  <!-- ========================= -->
+  <!-- TABELA -->
+  <!-- ========================= -->
+  <sys_db_object action="INSERT_OR_UPDATE">
+    <name>u_code_review_artifact</name>
+    <label>Code Review Artifact</label>
+    <super_class>sys_metadata</super_class>
+    <sys_scope>global</sys_scope>
+    <sys_package>global</sys_package>
+    <access>public</access>
+  </sys_db_object>
+
+  <!-- ========================= -->
+  <!-- COLUNAS -->
+  <!-- ========================= -->
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>u_code_review_artifact</name>
+    <element>u_link_do_artefato</element>
+    <column_label>Link do Artefato</column_label>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+    <mandatory>true</mandatory>
+    <unique>true</unique>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>u_code_review_artifact</name>
+    <element>u_nome_do_artefato_target_name</element>
+    <column_label>Nome do Artefato</column_label>
+    <internal_type>string</internal_type>
+    <max_length>255</max_length>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>u_code_review_artifact</name>
+    <element>u_tipo_de_artefato</element>
+    <column_label>Tipo de Artefato</column_label>
+    <internal_type>string</internal_type>
+    <max_length>100</max_length>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>u_code_review_artifact</name>
+    <element>u_action_do_artefato</element>
+    <column_label>Ação do Artefato</column_label>
+    <internal_type>string</internal_type>
+    <max_length>50</max_length>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>u_code_review_artifact</name>
+    <element>u_nome_do_update_set</element>
+    <column_label>Update Set</column_label>
+    <internal_type>string</internal_type>
+    <max_length>255</max_length>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>u_code_review_artifact</name>
+    <element>u_nome_da_aplicacao</element>
+    <column_label>Aplicação</column_label>
+    <internal_type>string</internal_type>
+    <max_length>255</max_length>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>u_code_review_artifact</name>
+    <element>u_passou_no_review</element>
+    <column_label>Passou no Review</column_label>
+    <internal_type>boolean</internal_type>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>u_code_review_artifact</name>
+    <element>u_nao_passou_no_review</element>
+    <column_label>Não Passou no Review</column_label>
+    <internal_type>boolean</internal_type>
+  </sys_dictionary>
+
+  <sys_dictionary action="INSERT_OR_UPDATE">
+    <name>u_code_review_artifact</name>
+    <element>u_comentario</element>
+    <column_label>Comentário</column_label>
+    <internal_type>string</internal_type>
+    <max_length>4000</max_length>
+  </sys_dictionary>
+
+</unload>
