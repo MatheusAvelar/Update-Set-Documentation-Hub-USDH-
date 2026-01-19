@@ -169,6 +169,7 @@ Essa propriedade é utilizada no **Script Include `GetUpdateSetArtifacts`**, con
 
 ```javascript
 var instanceUrl = gs.getProperty('doc.uri');
+```
 
 📌 **Caso essa propriedade não esteja configurada**, os links gerados poderão ficar **incompletos ou inválidos**.
 
